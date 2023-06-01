@@ -3,11 +3,12 @@ import SecaoFilmes from '@/Components/SecaoFilmes'
 import Titulo from '@/Components/Titulo'
 import { Inter } from 'next/font/google'
 import Header from '@/Components/Header';
+import { useState } from 'react';
 
 //https://www.igdb.com/ fonte dos posters
 
 const inter = Inter({ subsets: ['latin'] })
-const filmes = [
+/*const filmes = [
   {
     titulo: "God of War - Ragnarok",
     nota: "9.2",
@@ -33,8 +34,23 @@ const filmes = [
     nota: "8.8",
     poster: "https://images.igdb.com/igdb/image/upload/t_cover_big/co4zw5.png"
   }
-]
+]*/
 export default function Home() {
+  const [jogos, setJogos] = useState([])
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer f834e841be0d483bb9c5ce07b2cbc5da'
+    }
+  };
+  
+  fetch('https://api.rawg.io/api/games?key=f834e841be0d483bb9c5ce07b2cbc5da&dates=2019-09-01,2019-09-30&platforms=18,1,7', options)
+    .then(response => response.json())
+    .then(response => setJogos(response.results))
+    .catch(err => console.error(err));
+
   return (
     <>
 
@@ -49,7 +65,7 @@ export default function Home() {
       >
         <Titulo>Favoritos dos Players</Titulo>
         <div className='flex'>
-          <SecaoFilmes filmes={filmes} />
+          <SecaoFilmes filmes={jogos} />
         </div>
 
         <Titulo>Ação</Titulo>
